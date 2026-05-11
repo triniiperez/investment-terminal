@@ -38,22 +38,30 @@ body{background:#020617;color:#e2e8f0;font-family:'JetBrains Mono',monospace;fon
 .custom-search .inp{flex:1}
 .search-btn{padding:8px 16px;background:rgba(0,229,255,.15);border:1px solid rgba(0,229,255,.4);color:#00e5ff;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
 .search-btn:hover{background:rgba(0,229,255,.25)}
-.signal-box{border-radius:8px;padding:16px;margin-bottom:14px}
-.sig-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px}
-.sig-stat{background:#0a1628;border-radius:6px;padding:10px;border:1px solid #1e293b}
+.signal-main-box{border-radius:8px;padding:18px;margin-bottom:14px}
+.indic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.indic-card{background:#0a1628;border-radius:6px;padding:12px;border:1px solid #1e293b}
+.indic-lbl{font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:4px}
+.indic-val{font-size:20px;font-weight:700;margin-bottom:2px}
+.indic-sub{font-size:10px;color:#475569}
 .rsi-track{height:10px;border-radius:5px;position:relative;background:linear-gradient(90deg,#00ff9d 0%,#00ff9d 30%,#ffd700 45%,#ffd700 55%,#ff7c00 70%,#ff3355 100%)}
-.rsi-thumb{position:absolute;top:-3px;width:16px;height:16px;border-radius:50%;background:#fff;border:2.5px solid #020617;transform:translateX(-50%);box-shadow:0 0 8px rgba(255,255,255,.4);transition:left .4s ease}
-.disclaimer{background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.2);border-radius:6px;padding:10px 14px;font-size:11px;color:#ffd700;line-height:1.6}
+.rsi-thumb{position:absolute;top:-3px;width:16px;height:16px;border-radius:50%;background:#fff;border:2.5px solid #020617;transform:translateX(-50%);box-shadow:0 0 8px rgba(255,255,255,.4);transition:left .5s ease}
+.disclaimer{background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.2);border-radius:6px;padding:10px 14px;font-size:11px;color:#ffd700;line-height:1.6;margin-top:14px}
 .badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600}
 .hidden{display:none}
 .info-box{background:#0a1628;border:1px solid #1e293b;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:11px;color:#94a3b8;line-height:1.6}
+.score-bar-wrap{margin-bottom:16px}
+.score-bar{height:8px;border-radius:4px;background:#1e293b;overflow:hidden;margin-top:6px}
+.score-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.ma-badge{display:inline-block;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600;margin-right:6px;margin-bottom:4px}
 input[type=range]{width:100%;accent-color:#00e5ff;cursor:pointer}
-@media(max-width:600px){.row2{grid-template-columns:1fr}.toggle-wrap{min-width:unset}}
+@media(max-width:600px){.row2{grid-template-columns:1fr}.toggle-wrap{min-width:unset}.indic-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <div class="page">
 
+  <!-- HEADER -->
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid #1e293b;flex-wrap:wrap;gap:8px">
     <div>
       <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700"><span style="color:#00e5ff">▌</span> INVESTMENT TERMINAL</div>
@@ -62,6 +70,7 @@ input[type=range]{width:100%;accent-color:#00e5ff;cursor:pointer}
     <span id="liveBadge" style="background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.35);color:#ffd700;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600">● CARGANDO</span>
   </div>
 
+  <!-- STAT CARDS -->
   <div class="stat-grid">
     <div class="stat" style="border-top-color:#00e5ff"><div class="stat-lbl">DÓLAR MEP</div><div class="stat-val" id="sMep" style="color:#00e5ff">$ 1.215</div><div class="stat-sub">dolarapi.com</div></div>
     <div class="stat" style="border-top-color:#00ff9d"><div class="stat-lbl">TNA PLAZO FIJO</div><div class="stat-val" id="sPF" style="color:#00ff9d">37%</div><div class="stat-sub">bancos privados</div></div>
@@ -70,6 +79,7 @@ input[type=range]{width:100%;accent-color:#00e5ff;cursor:pointer}
     <div class="stat" style="border-top-color:#f59e0b"><div class="stat-lbl">BTC / USD</div><div class="stat-val" id="sBTC" style="color:#f59e0b">—</div><div class="stat-sub" id="sBTCsub">cargando...</div></div>
   </div>
 
+  <!-- SIMULADOR -->
   <div class="card">
     <div class="card-hdr">
       <span class="sec-title">◈ Simulador de cartera</span>
@@ -146,11 +156,13 @@ input[type=range]{width:100%;accent-color:#00e5ff;cursor:pointer}
     <div id="inflNota" class="hidden" style="margin-top:10px;background:rgba(255,124,0,.07);border:1px solid rgba(255,124,0,.25);border-radius:6px;padding:8px 12px;font-size:11px;color:#ff7c00;line-height:1.6"></div>
   </div>
 
+  <!-- SEÑALES DE MERCADO -->
   <div class="card">
     <div class="card-hdr">
-      <span class="sec-title">◈ Señales de mercado · ¿Comprar o vender?</span>
+      <span class="sec-title">◈ Análisis técnico · ¿Comprar o vender?</span>
       <span class="badge hidden" id="sigBadge"></span>
     </div>
+
     <div class="field-lbl">Monedas rápidas</div>
     <div class="coin-btns">
       <button class="coin-btn on" onclick="selectPreset(this,'BTCUSDT','BTC')">BTC</button>
@@ -159,15 +171,114 @@ input[type=range]{width:100%;accent-color:#00e5ff;cursor:pointer}
       <button class="coin-btn"   onclick="selectPreset(this,'BNBUSDT','BNB')">BNB</button>
       <button class="coin-btn"   onclick="selectPreset(this,'XRPUSDT','XRP')">XRP</button>
     </div>
-    <div class="field-lbl">Buscá cualquier moneda — escribí el símbolo (ej: DOGE, AVAX, ADA, PEPE, SHIB...)</div>
+    <div class="field-lbl">Buscá cualquier moneda — escribí el símbolo (ej: DOGE, AVAX, ADA, PEPE...)</div>
     <div class="custom-search">
-      <input class="inp" id="customCoin" placeholder="Ej: DOGE, AVAX, ADA, MATIC, PEPE" onkeydown="if(event.key==='Enter')searchCustom()"/>
+      <input class="inp" id="customCoin" placeholder="Ej: DOGE, AVAX, ADA, PEPE, SHIB" onkeydown="if(event.key==='Enter')searchCustom()"/>
       <button class="search-btn" onclick="searchCustom()">Buscar →</button>
     </div>
-    <div id="marketLoading" style="text-align:center;padding:28px;color:#64748b;font-size:12px">⟳ Consultando BTC...</div>
+
+    <div id="marketLoading" style="text-align:center;padding:36px;color:#64748b;font-size:12px">⟳ Cargando análisis de BTC...</div>
     <div id="marketError" class="hidden" style="padding:16px;font-size:12px;background:rgba(255,51,85,.08);border:1px solid rgba(255,51,85,.25);border-radius:6px;line-height:1.8;color:#ff3355"></div>
-    <div id="marketContent" class="hidden"></div>
-    <div class="disclaimer">⚠ Disclaimer: señales exclusivamente educativas. No son asesoramiento financiero. Invertir en criptoactivos implica riesgo de pérdida total del capital. Consultá un asesor matriculado.</div>
+
+    <div id="marketContent" class="hidden">
+
+      <!-- SEÑAL PRINCIPAL -->
+      <div id="signalBox" class="signal-main-box">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+          <div>
+            <div style="font-size:11px;opacity:.8;margin-bottom:6px;letter-spacing:.5px" id="sigPair">BTC / USDT</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700" id="sigLabel">—</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;opacity:.7;margin-bottom:4px;letter-spacing:1px">PRECIO ACTUAL (USD)</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700" id="sigPrice">—</div>
+            <div style="font-size:12px;margin-top:3px" id="sigChange">—</div>
+            <div style="font-size:11px;margin-top:3px;opacity:.8" id="sig7d">—</div>
+          </div>
+        </div>
+        <div style="padding-top:10px;border-top-width:1px;border-top-style:solid;border-top-color:rgba(255,255,255,.1);font-size:12px;line-height:1.7;opacity:.9" id="sigDesc">—</div>
+      </div>
+
+      <!-- SCORE COMBINADO -->
+      <div style="background:#0a1628;border:1px solid #1e293b;border-radius:8px;padding:14px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:11px;color:#64748b;letter-spacing:1px">SCORE TÉCNICO COMBINADO</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700" id="scoreVal">—</div>
+        </div>
+        <div class="score-bar"><div class="score-fill" id="scoreFill" style="width:0%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:#475569;margin-top:4px">
+          <span style="color:#ff3355">Vender (0)</span><span style="color:#ffd700">Neutral (50)</span><span style="color:#00ff9d">Comprar (100)</span>
+        </div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:8px;line-height:1.5" id="scoreDesc">—</div>
+      </div>
+
+      <!-- INDICADORES -->
+      <div class="indic-grid">
+        <!-- RSI -->
+        <div class="indic-card">
+          <div class="indic-lbl">RSI (14) — REAL</div>
+          <div class="indic-val" id="iRSI">—</div>
+          <div class="indic-sub" id="iRSIsub">—</div>
+          <div style="margin-top:8px">
+            <div class="rsi-track" style="height:6px"><div class="rsi-thumb" id="rsiThumb" style="left:50%;width:12px;height:12px;top:-3px"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;margin-top:4px">
+              <span style="color:#00ff9d">&lt;30</span><span style="color:#ffd700">50</span><span style="color:#ff3355">&gt;70</span>
+            </div>
+          </div>
+        </div>
+        <!-- Media Móvil -->
+        <div class="indic-card">
+          <div class="indic-lbl">MEDIA MÓVIL 20</div>
+          <div class="indic-val" id="iMA">—</div>
+          <div class="indic-sub" id="iMAsub">—</div>
+          <div style="margin-top:8px" id="maBadgeWrap"></div>
+        </div>
+        <!-- Volumen -->
+        <div class="indic-card">
+          <div class="indic-lbl">VOLUMEN 24H</div>
+          <div class="indic-val" id="iVol">—</div>
+          <div class="indic-sub" id="iVolsub">—</div>
+        </div>
+        <!-- Variación 7d -->
+        <div class="indic-card">
+          <div class="indic-lbl">VARIACIÓN 7 DÍAS</div>
+          <div class="indic-val" id="i7d">—</div>
+          <div class="indic-sub" id="i7dsub">—</div>
+        </div>
+        <!-- High/Low -->
+        <div class="indic-card">
+          <div class="indic-lbl">MÁXIMO 24H</div>
+          <div class="indic-val" id="iHigh" style="font-size:15px">—</div>
+          <div class="indic-sub" id="iHighsub">—</div>
+        </div>
+        <div class="indic-card">
+          <div class="indic-lbl">MÍNIMO 24H</div>
+          <div class="indic-val" id="iLow" style="font-size:15px">—</div>
+          <div class="indic-sub" id="iLowsub">—</div>
+        </div>
+      </div>
+
+      <!-- GRÁFICO PRECIO 7 DÍAS -->
+      <div style="background:#0a1628;border:1px solid #1e293b;border-radius:8px;padding:14px;margin-bottom:14px">
+        <div style="font-size:11px;color:#64748b;letter-spacing:1px;margin-bottom:10px">PRECIO ÚLTIMAS 168 HORAS (7 DÍAS)</div>
+        <div style="position:relative;height:160px">
+          <canvas id="priceChart" role="img" aria-label="Gráfico de precio últimos 7 días"></canvas>
+        </div>
+      </div>
+
+      <!-- EXPLICACIÓN INDICADORES -->
+      <div style="background:#0a1628;border:1px solid #243b55;border-radius:8px;padding:14px;margin-bottom:14px">
+        <div style="font-size:11px;color:#64748b;letter-spacing:1px;margin-bottom:10px">¿QUÉ SIGNIFICA CADA INDICADOR?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;line-height:1.6;color:#94a3b8">
+          <div><span style="color:#00e5ff;font-weight:600">RSI (14):</span> Mide si el activo está sobrecomprado o sobrevendido usando los últimos 14 cierres de vela. Bajo 30 = posible compra. Sobre 70 = posible venta.</div>
+          <div><span style="color:#00e5ff;font-weight:600">Media Móvil 20:</span> Promedio de los últimos 20 precios de cierre. Si el precio actual está arriba de la MA → tendencia alcista. Si está abajo → bajista.</div>
+          <div><span style="color:#00e5ff;font-weight:600">Volumen 24H:</span> Cuánto dinero se operó en el día. Volumen alto confirma la dirección del movimiento. Volumen bajo = señal menos confiable.</div>
+          <div><span style="color:#00e5ff;font-weight:600">Score combinado:</span> Suma los tres indicadores (RSI + MA + variación 7d) con igual peso. Da una visión más completa que mirar uno solo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer">⚠ Disclaimer: análisis exclusivamente educativo. No es asesoramiento financiero. Los indicadores técnicos no predicen el futuro. Invertir en criptoactivos implica riesgo de pérdida total del capital.</div>
   </div>
 
   <div style="text-align:center;font-size:10px;color:#334155;letter-spacing:1px;padding-bottom:16px">
@@ -177,7 +288,7 @@ input[type=range]{width:100%;accent-color:#00e5ff;cursor:pointer}
 
 <script>
 var D={dolarMEP:1215,tnaPlazofijo:37,inflacionMensual:3.7,tnaBilletera:30};
-var currency='pesos',capitalARS=1000000,adjustInfl=false,simChart=null;
+var currency='pesos',capitalARS=1000000,adjustInfl=false,simChart=null,priceChart=null;
 
 var INSTRUMENTS={
   plazoFijo:   {name:'Plazo Fijo',            isUSD:false,getRate:function(){return D.tnaPlazofijo/100/12;},info:'Depósito bancario a 30 días. TNA en tiempo real. Históricamente suele quedar por debajo de la inflación pero con riesgo casi nulo.'},
@@ -197,10 +308,250 @@ var INSTRUMENTS={
 };
 
 function fmtN(n,d){d=d||0;return Number(n).toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d});}
-function fmtPct(n){return(n>=0?'+':'')+n.toFixed(1)+'%';}
-function calcRSI(p){return Math.round(30+(p%10000)/10000*55);}
+function fmtPct(n){return(n>=0?'+':'')+n.toFixed(2)+'%';}
+function fmtVol(v){if(v>=1e9)return(v/1e9).toFixed(2)+' B';if(v>=1e6)return(v/1e6).toFixed(1)+' M';if(v>=1e3)return(v/1e3).toFixed(0)+' K';return v.toFixed(0);}
+function fmtPrice(p){return p>100?fmtN(Math.round(p)):p>1?p.toFixed(4):p.toFixed(6);}
 function $(id){return document.getElementById(id);}
 
+// ── RSI REAL ──────────────────────────────────────────────────────────────
+function computeRSI(closes, period){
+  period = period || 14;
+  if(closes.length < period+1) return null;
+  var gains=0, losses=0;
+  for(var i=closes.length-period; i<closes.length; i++){
+    var diff = closes[i]-closes[i-1];
+    if(diff>=0) gains+=diff; else losses+=Math.abs(diff);
+  }
+  var avgGain=gains/period, avgLoss=losses/period;
+  if(avgLoss===0) return 100;
+  var rs=avgGain/avgLoss;
+  return Math.round(100-(100/(1+rs)));
+}
+
+// ── MEDIA MÓVIL ───────────────────────────────────────────────────────────
+function computeMA(closes, period){
+  if(closes.length<period) return null;
+  var sum=0;
+  for(var i=closes.length-period;i<closes.length;i++) sum+=closes[i];
+  return sum/period;
+}
+
+// ── SCORE COMBINADO ───────────────────────────────────────────────────────
+function computeScore(rsi, price, ma20, change7d){
+  var score=50; // neutro base
+  // RSI (peso 40)
+  if(rsi!==null){
+    if(rsi<30)       score+=40;
+    else if(rsi<40)  score+=20;
+    else if(rsi<50)  score+=5;
+    else if(rsi>70)  score-=40;
+    else if(rsi>60)  score-=20;
+    else if(rsi>50)  score-=5;
+  }
+  // MA20 (peso 35)
+  if(ma20!==null){
+    var diff=((price-ma20)/ma20)*100;
+    if(diff>5)       score-=20; // muy por encima → sobrecomprado
+    else if(diff>0)  score+=15; // arriba de MA → alcista
+    else if(diff>-5) score-=15; // abajo de MA → bajista
+    else             score-=25; // muy abajo → posible oportunidad o caída fuerte
+  }
+  // Variación 7d (peso 25)
+  if(change7d!==null){
+    if(change7d>20)       score-=15; // subió demasiado, riesgo
+    else if(change7d>5)   score+=10;
+    else if(change7d>0)   score+=5;
+    else if(change7d>-10) score-=5;
+    else                   score-=15;
+  }
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+function getScoreColor(s){
+  if(s>=65) return '#00ff9d';
+  if(s>=50) return '#ffd700';
+  if(s>=35) return '#ff7c00';
+  return '#ff3355';
+}
+
+function getSignalFromScore(s, rsi, pctAboveMA){
+  if(s>=70) return {label:'COMPRAR',     color:'#00ff9d', bg:'rgba(0,255,157,.1)',  border:'rgba(0,255,157,.3)'};
+  if(s>=55) return {label:'ACUMULAR',    color:'#00e5ff', bg:'rgba(0,229,255,.1)',  border:'rgba(0,229,255,.3)'};
+  if(s>=45) return {label:'NEUTRAL',     color:'#ffd700', bg:'rgba(255,215,0,.08)', border:'rgba(255,215,0,.2)'};
+  if(s>=30) return {label:'PRECAUCIÓN',  color:'#ff7c00', bg:'rgba(255,124,0,.1)',  border:'rgba(255,124,0,.3)'};
+  return            {label:'VENDER / ESPERAR', color:'#ff3355', bg:'rgba(255,51,85,.1)', border:'rgba(255,51,85,.3)'};
+}
+
+function buildDesc(sig, rsi, ma20, price, change7d, change24h, lbl){
+  var parts=[];
+  parts.push('RSI real en '+rsi+' ('+( rsi<30?'sobreventa — posible rebote':rsi>70?'sobrecompra — posible corrección':'zona neutral')+').');
+  if(ma20!==null){
+    var pct=((price-ma20)/ma20*100).toFixed(1);
+    parts.push('Precio '+(price>ma20?'por encima':'por debajo')+' de la Media Móvil 20 en '+Math.abs(pct)+'% ('+(price>ma20?'tendencia alcista':'tendencia bajista')+').');
+  }
+  if(change7d!==null) parts.push('En los últimos 7 días '+(change7d>=0?'subió':'bajó')+' '+Math.abs(change7d).toFixed(1)+'%.');
+  return parts.join(' ');
+}
+
+// ── RENDER MARKET ─────────────────────────────────────────────────────────
+function renderMarket(ticker, klines, lbl){
+  var price   = parseFloat(ticker.lastPrice);
+  var change24h = parseFloat(ticker.priceChangePercent);
+  var high    = parseFloat(ticker.highPrice);
+  var low     = parseFloat(ticker.lowPrice);
+  var vol     = parseFloat(ticker.quoteVolume); // en USDT
+
+  // Extraer cierres de klines
+  var closes = klines.map(function(k){ return parseFloat(k[4]); });
+  var times  = klines.map(function(k){ return new Date(k[0]).toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); });
+
+  var rsi    = computeRSI(closes, 14);
+  var ma20   = computeMA(closes, 20);
+  var change7d = closes.length>1 ? ((closes[closes.length-1]-closes[0])/closes[0]*100) : null;
+  var score  = computeScore(rsi, price, ma20, change7d);
+  var sig    = getSignalFromScore(score);
+  var scoreColor = getScoreColor(score);
+
+  // ── Señal principal ──
+  var sb=$('sigBadge');
+  sb.textContent='⬤ '+sig.label;
+  sb.style.background=sig.bg; sb.style.border='1px solid '+sig.border; sb.style.color=sig.color;
+  sb.classList.remove('hidden');
+
+  var box=$('signalBox');
+  box.style.background=sig.bg; box.style.border='1px solid '+sig.border;
+  $('sigPair').textContent=lbl+' / USDT'; $('sigPair').style.color=sig.color;
+  $('sigLabel').textContent=sig.label; $('sigLabel').style.color=sig.color;
+  $('sigPrice').textContent='$ '+fmtPrice(price); $('sigPrice').style.color=sig.color;
+  $('sigChange').textContent=(change24h>=0?'▲':'▼')+' '+Math.abs(change24h).toFixed(2)+'% (24h)';
+  $('sigChange').style.color=change24h>=0?'#00ff9d':'#ff3355';
+  $('sig7d').textContent=change7d!==null?'7 días: '+(change7d>=0?'+':'')+change7d.toFixed(1)+'%':'';
+  $('sig7d').style.color=change7d!==null?(change7d>=0?'#00ff9d':'#ff3355'):'#64748b';
+  $('sigDesc').textContent=buildDesc(sig,rsi,ma20,price,change7d,change24h,lbl);
+  $('sigDesc').style.borderTopColor='rgba(255,255,255,.1)';
+
+  // ── Score ──
+  $('scoreVal').textContent=score+' / 100'; $('scoreVal').style.color=scoreColor;
+  $('scoreFill').style.width=score+'%'; $('scoreFill').style.background=scoreColor;
+  $('scoreDesc').textContent='Basado en RSI real (40%), posición vs Media Móvil 20 (35%) y variación de 7 días (25%). Un score sobre 65 es señal de compra; bajo 35 es señal de venta.';
+
+  // ── RSI ──
+  $('iRSI').textContent=rsi!==null?rsi:'—'; $('iRSI').style.color=rsi<30?'#00ff9d':rsi>70?'#ff3355':'#ffd700';
+  $('iRSIsub').textContent=rsi<30?'Sobreventa':rsi>70?'Sobrecompra':rsi<45?'Zona baja':rsi>55?'Zona alta':'Neutral';
+  if(rsi!==null) $('rsiThumb').style.left=rsi+'%';
+
+  // ── MA20 ──
+  if(ma20!==null){
+    var pctMA=((price-ma20)/ma20*100);
+    $('iMA').textContent='$ '+fmtPrice(ma20); $('iMA').style.color=price>ma20?'#00ff9d':'#ff3355';
+    $('iMAsub').textContent=(price>ma20?'Precio +':'Precio ')+pctMA.toFixed(1)+'% vs MA';
+    $('maBadgeWrap').innerHTML='<span class="ma-badge" style="background:'+(price>ma20?'rgba(0,255,157,.15)':'rgba(255,51,85,.15)')+';color:'+(price>ma20?'#00ff9d':'#ff3355')+';border:1px solid '+(price>ma20?'rgba(0,255,157,.3)':'rgba(255,51,85,.3)')+';">'+(price>ma20?'↗ Tendencia alcista':'↘ Tendencia bajista')+'</span>';
+  }
+
+  // ── Volumen ──
+  $('iVol').textContent='$ '+fmtVol(vol); $('iVol').style.color='#e2e8f0';
+  $('iVolsub').textContent=vol>1e9?'Volumen muy alto':vol>5e8?'Volumen alto':vol>1e8?'Volumen normal':'Volumen bajo';
+
+  // ── 7d ──
+  $('i7d').textContent=change7d!==null?(change7d>=0?'+':'')+change7d.toFixed(2)+'%':'—';
+  $('i7d').style.color=change7d!==null?(change7d>=0?'#00ff9d':'#ff3355'):'#64748b';
+  $('i7dsub').textContent=change7d!==null?(change7d>10?'Semana muy fuerte':change7d>0?'Semana positiva':change7d>-10?'Semana negativa':'Semana muy bajista'):'';
+
+  // ── High/Low ──
+  $('iHigh').textContent='$ '+fmtPrice(high); $('iHigh').style.color='#00ff9d';
+  $('iHighsub').textContent='máximo del día';
+  $('iLow').textContent='$ '+fmtPrice(low); $('iLow').style.color='#ff3355';
+  $('iLowsub').textContent='mínimo del día';
+
+  // ── Gráfico de precio 7d ──
+  var lastCloses = closes.slice(-48); // últimas 48 velas de 4h = 8 días aprox
+  var lastTimes  = times.slice(-48);
+  var lineColor  = (lastCloses[lastCloses.length-1]>=lastCloses[0])?'#00ff9d':'#ff3355';
+
+  if(priceChart) priceChart.destroy();
+  priceChart = new Chart($('priceChart'),{
+    type:'line',
+    data:{
+      labels:lastTimes,
+      datasets:[{
+        data:lastCloses,
+        borderColor:lineColor,
+        backgroundColor:lineColor.replace(')',', 0.06)').replace('rgb','rgba'),
+        borderWidth:2,pointRadius:0,pointHoverRadius:4,fill:true,tension:0.3
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#0d1f38',borderColor:'#243b55',borderWidth:1,
+          titleColor:'#64748b',bodyColor:lineColor,
+          titleFont:{family:'JetBrains Mono',size:10},bodyFont:{family:'JetBrains Mono',size:11},
+          callbacks:{
+            title:function(i){return i[0].label;},
+            label:function(i){return '$ '+fmtPrice(i.raw);}
+          }
+        }
+      },
+      scales:{
+        x:{ticks:{color:'#64748b',font:{size:9},maxTicksLimit:7},grid:{color:'rgba(30,41,59,1)'}},
+        y:{ticks:{color:'#64748b',font:{size:9},callback:function(v){return v>1000?fmtN(Math.round(v)):v.toFixed(2);}},grid:{color:'rgba(30,41,59,1)'}}
+      }
+    }
+  });
+
+  $('marketLoading').classList.add('hidden');
+  $('marketError').classList.add('hidden');
+  $('marketContent').classList.remove('hidden');
+}
+
+// ── FETCH CON BINANCE ────────────────────────────────────────────────────
+var SYMBOLS={BTC:'BTCUSDT',ETH:'ETHUSDT',SOL:'SOLUSDT',BNB:'BNBUSDT',XRP:'XRPUSDT',DOGE:'DOGEUSDT',ADA:'ADAUSDT',AVAX:'AVAXUSDT',MATIC:'MATICUSDT',DOT:'DOTUSDT',LINK:'LINKUSDT',UNI:'UNIUSDT',ATOM:'ATOMUSDT',LTC:'LTCUSDT',TRX:'TRXUSDT',NEAR:'NEARUSDT',ALGO:'ALGOUSDT',XLM:'XLMUSDT',FIL:'FILUSDT',SAND:'SANDUSDT',MANA:'MANAUSDT',AXS:'AXSUSDT',AAVE:'AAVEUSDT',MKR:'MKRUSDT',ARB:'ARBUSDT',OP:'OPUSDT',SUI:'SUIUSDT',APT:'APTUSDT',PEPE:'PEPEUSDT',SHIB:'SHIBUSDT',FLOKI:'FLOKIUSDT',WIF:'WIFUSDT',BONK:'BONKUSDT',INJ:'INJUSDT',SEI:'SEIUSDT',TIA:'TIAUSDT',JUP:'JUPUSDT',WLD:'WLDUSDT',FET:'FETUSDT',RENDER:'RENDERUSDT',IMX:'IMXUSDT',GRT:'GRTUSDT',LDO:'LDOUSDT',RUNE:'RUNEUSDT',CAKE:'CAKEUSDT'};
+
+async function fetchCoin(symbol, lbl){
+  $('marketContent').classList.add('hidden');
+  $('marketError').classList.add('hidden');
+  $('sigBadge').classList.add('hidden');
+  $('marketLoading').classList.remove('hidden');
+  $('marketLoading').textContent='⟳ Cargando análisis de '+lbl+'...';
+
+  try{
+    var sym=symbol.toUpperCase();
+    var [rTicker, rKlines] = await Promise.all([
+      fetch('https://api.binance.com/api/v3/ticker/24hr?symbol='+sym),
+      fetch('https://api.binance.com/api/v3/klines?symbol='+sym+'&interval=4h&limit=50')
+    ]);
+
+    if(!rTicker.ok||!rKlines.ok) throw new Error('API error');
+    var ticker = await rTicker.json();
+    var klines = await rKlines.json();
+
+    renderMarket(ticker, klines, lbl.toUpperCase());
+
+  }catch(e){
+    $('marketLoading').classList.add('hidden');
+    $('marketError').innerHTML='<strong>No se encontró "'+lbl+'".</strong><br><br>Escribí solo el símbolo sin "USDT":<br><span style="color:#94a3b8">DOGE · AVAX · ADA · MATIC · PEPE · SHIB · ARB · OP · SUI · APT · DOT · LINK · ATOM · LTC</span>';
+    $('marketError').classList.remove('hidden');
+  }
+}
+
+function selectPreset(btn, symbol, lbl){
+  document.querySelectorAll('.coin-btn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  $('customCoin').value='';
+  fetchCoin(symbol, lbl);
+}
+
+function searchCustom(){
+  var raw=$('customCoin').value.trim().toUpperCase().replace(/\s+/g,'').replace(/USDT$/,'');
+  if(!raw) return;
+  var symbol=SYMBOLS[raw]||(raw+'USDT');
+  document.querySelectorAll('.coin-btn').forEach(function(b){b.classList.remove('on');});
+  fetchCoin(symbol, raw);
+}
+
+// ── SIMULADOR ────────────────────────────────────────────────────────────
 function toggleInfl(){
   adjustInfl=!adjustInfl;
   $('inflPill').classList.toggle('on',adjustInfl);
@@ -231,7 +582,7 @@ function redraw(){
   $('presetLbl').textContent=inst.name;
   $('instrInfo').textContent=inst.info;
   $('legendLbl').textContent=adjustInfl?inst.name+' (real)':inst.name;
-  $('chartDesc').textContent=adjustInfl?'Modo real: cuánto vale tu capital en pesos de hoy. Si sube, ganás poder adquisitivo.':'Modo nominal: crecimiento bruto de tu capital. Activá el toggle para ver el valor real.';
+  $('chartDesc').textContent=adjustInfl?'Modo real: cuánto vale tu capital en pesos de hoy.':'Modo nominal: crecimiento bruto con interés compuesto.';
   var labels=[],vals=[];
   for(var i=0;i<=months;i++){
     labels.push(i===0?'Hoy':'M'+i);
@@ -247,14 +598,14 @@ function redraw(){
   var valColor=ganPct>=0?'#00ff9d':'#ff3355';
   $('resultVal').textContent=(currency==='pesos'?'$ ':'USD ')+fmtN(final);
   $('resultVal').style.color=valColor;
-  $('resultSub').textContent=fmtPct(ganPct)+(adjustInfl?' (real)':' nominal');
+  $('resultSub').textContent=(ganPct>=0?'+':'')+ganPct.toFixed(1)+'%'+(adjustInfl?' (real)':' nominal');
   $('resultSub').style.color=valColor;
   $('resultBadge').innerHTML=currency==='usd'
-    ?'<span class="badge" style="background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.3);color:#00e5ff">En USD — comparación con inflación ARS no aplica</span>'
+    ?'<span class="badge" style="background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.3);color:#00e5ff">En USD</span>'
     :(leGana?'<span class="badge" style="background:rgba(0,255,157,.12);border:1px solid rgba(0,255,157,.3);color:#00ff9d">✓ Le ganás a la inflación</span>':'<span class="badge" style="background:rgba(255,124,0,.12);border:1px solid rgba(255,124,0,.3);color:#ff7c00">✗ La inflación te supera</span>');
   var nota=$('inflNota');
-  if(inst.isUSD&&currency==='pesos'&&!adjustInfl){nota.innerHTML='💡 Instrumento en USD. La curva en pesos incluye devaluación estimada ~2% mensual del MEP.';nota.classList.remove('hidden');}
-  else if((key==='plazoFijo'||key==='billetera'||key==='fciMM')&&currency==='pesos'&&!adjustInfl){var ia=(Math.pow(1+inflM,months)-1)*100;nota.innerHTML='⚠ Inflación acumulada estimada ~'+ia.toFixed(0)+'% en '+months+' meses. Este instrumento ('+fmtPct(ganPct)+' nominal) '+(ganPct>ia?'le gana':'pierde contra')+' la inflación. Activá el toggle.';nota.classList.remove('hidden');}
+  if(inst.isUSD&&currency==='pesos'&&!adjustInfl){nota.innerHTML='💡 Instrumento en USD. Curva en pesos incluye devaluación estimada ~2% mensual.';nota.classList.remove('hidden');}
+  else if((key==='plazoFijo'||key==='billetera'||key==='fciMM')&&currency==='pesos'&&!adjustInfl){var ia=(Math.pow(1+inflM,months)-1)*100;nota.innerHTML='⚠ Inflación acumulada ~'+ia.toFixed(0)+'% en '+months+' meses. Este instrumento ('+(ganPct>=0?'+':'')+ganPct.toFixed(1)+'% nominal) '+(ganPct>ia?'le gana':'pierde contra')+' la inflación.';nota.classList.remove('hidden');}
   else nota.classList.add('hidden');
   var ti=Math.max(1,Math.floor(months/6)),tl=labels.map(function(l,i){return i%ti===0?l:'';});
   function fmtY(v){if(v>=1e9)return(v/1e9).toFixed(1)+'B';if(v>=1e6)return(v/1e6).toFixed(1)+'M';if(v>=1e3)return(v/1e3).toFixed(0)+'K';return v;}
@@ -262,111 +613,11 @@ function redraw(){
     simChart=new Chart($('simChart'),{type:'line',data:{labels:labels,datasets:[{label:inst.name,data:vals,borderColor:'#00ff9d',backgroundColor:'rgba(0,255,157,.06)',borderWidth:2.5,pointRadius:0,pointHoverRadius:5,pointHoverBackgroundColor:'#00ff9d',fill:true,tension:0.3}]},
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d1f38',borderColor:'#243b55',borderWidth:1,titleColor:'#64748b',bodyColor:'#00ff9d',titleFont:{family:'JetBrains Mono',size:11},bodyFont:{family:'JetBrains Mono',size:12},
         callbacks:{title:function(i){return'📅 '+i[0].label;},label:function(i){return(currency==='pesos'?'$ ':'USD ')+fmtN(i.raw)+(adjustInfl?' (real)':'');}}}},
-        scales:{x:{ticks:{color:'#64748b',font:{size:10},callback:function(_,i){return tl[i];}},grid:{color:'rgba(30,41,59,1)'}},y:{ticks:{color:'#64748b',font:{size:10},callback:fmtY},grid:{color:'rgba(30,41,59,1)'}}}}}); 
+        scales:{x:{ticks:{color:'#64748b',font:{size:10},callback:function(_,i){return tl[i];}},grid:{color:'rgba(30,41,59,1)'}},y:{ticks:{color:'#64748b',font:{size:10},callback:fmtY},grid:{color:'rgba(30,41,59,1)'}}}}});
   } else {
     simChart.data.labels=labels;simChart.data.datasets[0].data=vals;simChart.data.datasets[0].label=inst.name;
     simChart.options.scales.x.ticks.callback=function(_,i){return tl[i];};simChart.update();
   }
-}
-
-function getSignal(rsi){
-  if(rsi<30) return{label:'COMPRAR',bg:'rgba(0,255,157,.1)',border:'rgba(0,255,157,.3)',color:'#00ff9d',desc:'Zona de sobreventa (RSI '+rsi+'). El activo puede estar subvaluado. Momento históricamente favorable para acumular de forma gradual.'};
-  if(rsi>70) return{label:'ESPERAR / VENDER',bg:'rgba(255,51,85,.1)',border:'rgba(255,51,85,.3)',color:'#ff3355',desc:'Zona de sobrecompra (RSI '+rsi+'). Riesgo de corrección. Si tenés posición, considerá proteger ganancias.'};
-  if(rsi>55) return{label:'PRECAUCIÓN',bg:'rgba(255,124,0,.1)',border:'rgba(255,124,0,.3)',color:'#ff7c00',desc:'Zona alta-media (RSI '+rsi+'). Impulso comprador pero riesgo creciente. Mantené stop-loss activo.'};
-  if(rsi<45) return{label:'ZONA DE ATENCIÓN',bg:'rgba(0,229,255,.1)',border:'rgba(0,229,255,.3)',color:'#00e5ff',desc:'Zona baja-media (RSI '+rsi+'). Posible oportunidad de acumulación gradual. Esperá confirmación antes de entrar fuerte.'};
-  return{label:'NEUTRAL',bg:'rgba(255,215,0,.1)',border:'rgba(255,215,0,.25)',color:'#ffd700',desc:'Zona neutral (RSI '+rsi+'). Sin señal clara. Buen momento para mantener o esperar.'};
-}
-
-function renderMarket(price,change24h,lbl){
-  var rsi=calcRSI(price),sig=getSignal(rsi);
-  var conf=rsi<25||rsi>75?'Alta':rsi<35||rsi>65?'Media':'Baja';
-  var act=rsi<30?'Acumular':rsi>70?'Proteger':'Observar';
-  var chC=(change24h||0)>=0?'#00ff9d':'#ff3355',chA=(change24h||0)>=0?'▲':'▼';
-  var ps=price>100?fmtN(Math.round(price)):price.toFixed(4);
-  var ch24=change24h!==null?'<div style="font-size:12px;color:'+chC+';margin-top:3px">'+chA+' '+Math.abs(change24h).toFixed(2)+'% (24h)</div>':'';
-  var sb=$('sigBadge');sb.textContent='⬤ '+sig.label;sb.style.background=sig.bg;sb.style.border='1px solid '+sig.border;sb.style.color=sig.color;sb.classList.remove('hidden');
-  $('marketContent').innerHTML=
-    '<div class="signal-box" style="background:'+sig.bg+';border:1px solid '+sig.border+'">'+
-    '<div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">'+
-    '<div><div style="font-size:11px;color:'+sig.color+';opacity:.8;margin-bottom:6px">'+lbl+' / USDT</div>'+
-    '<div style="font-family:Space Grotesk,sans-serif;font-size:26px;font-weight:700;color:'+sig.color+'">'+sig.label+'</div></div>'+
-    '<div style="text-align:right"><div style="font-size:10px;color:'+sig.color+';opacity:.7;margin-bottom:4px">PRECIO (USD)</div>'+
-    '<div style="font-family:Space Grotesk,sans-serif;font-size:22px;font-weight:700;color:'+sig.color+'">$ '+ps+'</div>'+ch24+'</div></div>'+
-    '<div style="margin-top:12px;padding-top:10px;border-top:1px solid '+sig.border+';font-size:12px;color:'+sig.color+';line-height:1.65;opacity:.9">📊 '+sig.desc+'</div></div>'+
-    '<div class="sig-grid">'+
-    [['RSI (14)',rsi,rsi<30?'Sobreventa':rsi>70?'Sobrecompra':'Neutral',sig.color,24],
-     ['CAMBIO 24H',change24h!==null?(change24h>=0?'+':'')+change24h.toFixed(2)+'%':'—','variación diaria',chC,15],
-     ['CONFIANZA',conf,'basada en RSI','#e2e8f0',15],
-     ['SUGERENCIA',act,'solo educativa',sig.color,15]
-    ].map(function(p){return'<div class="sig-stat"><div style="font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:6px">'+p[0]+'</div><div style="font-size:'+p[4]+'px;font-weight:600;color:'+p[3]+'">'+p[1]+'</div><div style="font-size:10px;color:#475569;margin-top:2px">'+p[2]+'</div></div>';}).join('')+'</div>'+
-    '<div><div style="display:flex;justify-content:space-between;font-size:10px;color:#64748b;margin-bottom:8px"><span>RSI 0</span><span style="color:'+sig.color+';font-weight:600">RSI actual: '+rsi+'</span><span>RSI 100</span></div>'+
-    '<div class="rsi-track"><div class="rsi-thumb" style="left:'+rsi+'%"></div></div>'+
-    '<div style="display:flex;justify-content:space-between;font-size:10px;margin-top:6px"><span style="color:#00ff9d">Sobreventa (&lt;30)</span><span style="color:#ffd700">Neutral</span><span style="color:#ff3355">Sobrecompra (&gt;70)</span></div></div>';
-  $('marketLoading').classList.add('hidden');$('marketError').classList.add('hidden');$('marketContent').classList.remove('hidden');
-}
-
-// ── BINANCE API — sin límite de consultas ─────────────────────────────────
-async function fetchCoin(symbol, lbl){
-  $('marketContent').classList.add('hidden');
-  $('marketError').classList.add('hidden');
-  $('sigBadge').classList.add('hidden');
-  $('marketLoading').classList.remove('hidden');
-  $('marketLoading').textContent='⟳ Consultando '+lbl+'...';
-
-  var price=null, change24h=null;
-  try{
-    var url='https://api.binance.com/api/v3/ticker/24hr?symbol='+symbol.toUpperCase();
-    var r=await fetch(url);
-    if(r.ok){
-      var j=await r.json();
-      if(j.lastPrice){
-        price=parseFloat(j.lastPrice);
-        change24h=parseFloat(j.priceChangePercent);
-      }
-    }
-  }catch(e){}
-
-  if(price===null){
-    $('marketLoading').classList.add('hidden');
-    $('marketError').innerHTML=
-      '<strong>No se encontró "'+lbl+'".</strong><br><br>'+
-      'Escribí solo el símbolo sin "USDT": <br>'+
-      '<span style="color:#94a3b8">DOGE · AVAX · ADA · MATIC · PEPE · SHIB · ARB · OP · SUI · APT · DOT · LINK · ATOM · LTC · TRX · NEAR · FIL · INJ · WLD · JUP</span>';
-    $('marketError').classList.remove('hidden');
-    return;
-  }
-  renderMarket(price, change24h, lbl.toUpperCase());
-}
-
-// Aliases: símbolo corto → par Binance
-var SYMBOLS={
-  BTC:'BTCUSDT',ETH:'ETHUSDT',SOL:'SOLUSDT',BNB:'BNBUSDT',XRP:'XRPUSDT',
-  DOGE:'DOGEUSDT',ADA:'ADAUSDT',AVAX:'AVAXUSDT',MATIC:'MATICUSDT',
-  DOT:'DOTUSDT',LINK:'LINKUSDT',UNI:'UNIUSDT',ATOM:'ATOMUSDT',LTC:'LTCUSDT',
-  TRX:'TRXUSDT',NEAR:'NEARUSDT',ALGO:'ALGOUSDT',XLM:'XLMUSDT',
-  FIL:'FILUSDT',SAND:'SANDUSDT',MANA:'MANAUSDT',AXS:'AXSUSDT',
-  AAVE:'AAVEUSDT',MKR:'MKRUSDT',ARB:'ARBUSDT',OP:'OPUSDT',
-  SUI:'SUIUSDT',APT:'APTUSDT',PEPE:'PEPEUSDT',SHIB:'SHIBUSDT',
-  FLOKI:'FLOKIUSDT',WIF:'WIFUSDT',BONK:'BONKUSDT',
-  INJ:'INJUSDT',SEI:'SEIUSDT',TIA:'TIAUSDT',JUP:'JUPUSDT',
-  WLD:'WLDUSDT',FET:'FETUSDT',RENDER:'RENDERUSDT',IMX:'IMXUSDT',
-  GRT:'GRTUSDT',LDO:'LDOUSDT',RUNE:'RUNEUSDT',CAKE:'CAKEUSDT',
-  ENS:'ENSUSDT',CRV:'CRVUSDT',SNX:'SNXUSDT',ZEC:'ZECUSDT',
-};
-
-function selectPreset(btn, symbol, lbl){
-  document.querySelectorAll('.coin-btn').forEach(function(b){b.classList.remove('on');});
-  btn.classList.add('on');
-  $('customCoin').value='';
-  fetchCoin(symbol, lbl);
-}
-
-function searchCustom(){
-  var raw=$('customCoin').value.trim().toUpperCase().replace(/\s+/g,'').replace(/USDT$/,'');
-  if(!raw) return;
-  var symbol=SYMBOLS[raw]||(raw+'USDT');
-  document.querySelectorAll('.coin-btn').forEach(function(b){b.classList.remove('on');});
-  fetchCoin(symbol, raw);
 }
 
 async function loadArgentina(){
@@ -387,13 +638,7 @@ async function loadArgentina(){
 async function loadBTC(){
   try{
     var r=await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
-    if(r.ok){
-      var j=await r.json();
-      var ch=parseFloat(j.priceChangePercent)||0;
-      $('sBTC').textContent='$ '+fmtN(Math.round(parseFloat(j.lastPrice)));
-      $('sBTCsub').textContent=(ch>=0?'▲':'▼')+' '+Math.abs(ch).toFixed(2)+'% (24h)';
-      $('sBTCsub').style.color=ch>=0?'#00ff9d':'#ff3355';
-    }
+    if(r.ok){var j=await r.json();var ch=parseFloat(j.priceChangePercent)||0;$('sBTC').textContent='$ '+fmtN(Math.round(parseFloat(j.lastPrice)));$('sBTCsub').textContent=(ch>=0?'▲':'▼')+' '+Math.abs(ch).toFixed(2)+'% (24h)';$('sBTCsub').style.color=ch>=0?'#00ff9d':'#ff3355';}
   }catch(e){$('sBTCsub').textContent='sin datos';}
 }
 
