@@ -153,15 +153,15 @@ input[type=range]{width:100%;accent-color:#00e5ff;cursor:pointer}
     </div>
     <div class="field-lbl">Monedas rápidas</div>
     <div class="coin-btns">
-      <button class="coin-btn on" onclick="selectPreset(this,'bitcoin','BTC')">BTC</button>
-      <button class="coin-btn"   onclick="selectPreset(this,'ethereum','ETH')">ETH</button>
-      <button class="coin-btn"   onclick="selectPreset(this,'solana','SOL')">SOL</button>
-      <button class="coin-btn"   onclick="selectPreset(this,'binancecoin','BNB')">BNB</button>
-      <button class="coin-btn"   onclick="selectPreset(this,'ripple','XRP')">XRP</button>
+      <button class="coin-btn on" onclick="selectPreset(this,'BTCUSDT','BTC')">BTC</button>
+      <button class="coin-btn"   onclick="selectPreset(this,'ETHUSDT','ETH')">ETH</button>
+      <button class="coin-btn"   onclick="selectPreset(this,'SOLUSDT','SOL')">SOL</button>
+      <button class="coin-btn"   onclick="selectPreset(this,'BNBUSDT','BNB')">BNB</button>
+      <button class="coin-btn"   onclick="selectPreset(this,'XRPUSDT','XRP')">XRP</button>
     </div>
-    <div class="field-lbl">Buscá cualquier moneda (usá el nombre en inglés: dogecoin, avalanche-2, cardano...)</div>
+    <div class="field-lbl">Buscá cualquier moneda — escribí el símbolo (ej: DOGE, AVAX, ADA, PEPE, SHIB...)</div>
     <div class="custom-search">
-      <input class="inp" id="customCoin" placeholder="ej: dogecoin, shiba-inu, pepe, avalanche-2" onkeydown="if(event.key==='Enter')searchCustom()"/>
+      <input class="inp" id="customCoin" placeholder="Ej: DOGE, AVAX, ADA, MATIC, PEPE" onkeydown="if(event.key==='Enter')searchCustom()"/>
       <button class="search-btn" onclick="searchCustom()">Buscar →</button>
     </div>
     <div id="marketLoading" style="text-align:center;padding:28px;color:#64748b;font-size:12px">⟳ Consultando BTC...</div>
@@ -181,19 +181,19 @@ var currency='pesos',capitalARS=1000000,adjustInfl=false,simChart=null;
 
 var INSTRUMENTS={
   plazoFijo:   {name:'Plazo Fijo',            isUSD:false,getRate:function(){return D.tnaPlazofijo/100/12;},info:'Depósito bancario a 30 días. TNA en tiempo real. Históricamente suele quedar por debajo de la inflación pero con riesgo casi nulo.'},
-  plazoFijoUVA:{name:'Plazo Fijo UVA',         isUSD:false,getRate:function(){return(D.inflacionMensual/100)+(0.01/12);},info:'Ajusta por inflación (CER) + 1% anual. Mínimo 90 días. Único plazo fijo en pesos que protege el poder adquisitivo. Riesgo bajo.'},
-  billetera:   {name:'Billetera Virtual',       isUSD:false,getRate:function(){return D.tnaBilletera/100/12;},info:'Mercado Pago, Ualá, Naranja X. Liquidez inmediata. Ideal para fondo de emergencia.'},
-  fciMM:       {name:'FCI Money Market',        isUSD:false,getRate:function(){return 0.29/12;},info:'Fondo en cauciones y plazos fijos. Liquidez 24hs hábiles. Disponible en Galicia, Santander, BIND.'},
-  on:          {name:'ON Dólar-linked',         isUSD:true, getRate:function(){return 0.04/12;},info:'Obligación Negociable empresarial ~4% USD. Requiere cuenta comitente (Balanz, IOL). Riesgo crediticio del emisor.'},
-  ao26:        {name:'Bono AO26 (USD)',          isUSD:true, getRate:function(){return 0.08/12;},info:'Bono soberano en USD ~8% anual. Alta volatilidad y riesgo país. No recomendado para inversores conservadores.'},
-  cedear:      {name:'CEDEARs (S&P en ARS)',    isUSD:false,getRate:function(){return(1+0.0093)*(1+0.02)-1;},info:'Certificados del exterior en pesos. Seguís el S&P 500 más la devaluación. Muy popular para dolarizarse dentro del sistema local.'},
-  merval:      {name:'Merval (renta variable)', isUSD:false,getRate:function(){return 0.80/12;},info:'Acciones argentinas. ~80% nominal anual histórico en ARS con altísima volatilidad. Solo para inversores experimentados.'},
-  sp500:       {name:'S&P 500 (USD)',            isUSD:true, getRate:function(){return 0.0093;},info:'500 mayores empresas de EE.UU. ~11.2% anual histórico en USD. Accedés via ETFs (VOO, SPY) o CEDEARs. Horizonte: 5+ años.'},
-  nasdaq:      {name:'NASDAQ 100 (USD)',         isUSD:true, getRate:function(){return 0.14/12;},info:'Las 100 mayores tecnológicas. ~14% anual en USD, más volátil que S&P 500.'},
-  oro:         {name:'Oro (USD)',                isUSD:true, getRate:function(){return 0.07/12;},info:'~7% anual histórico en USD. Cobertura ante crisis. Accedés via ETF GLD o CEDEAR de Barrick Gold.'},
-  btc:         {name:'Bitcoin (ref. educ.)',     isUSD:true, getRate:function(){return 0.05;},info:'~60% anual histórico en USD con caídas de hasta 80%. Promedio histórico que no garantiza retornos futuros.'},
-  eth:         {name:'Ethereum (ref. educ.)',    isUSD:true, getRate:function(){return 0.50/12;},info:'~50% anual histórico en USD. Similar volatilidad a BTC. Solo referencia educativa.'},
-  staking:     {name:'Staking estable (USDT)',   isUSD:true, getRate:function(){return 0.08/12;},info:'~6-10% anual en USD en Binance Earn u otros. Riesgo de plataforma. No equivale a un banco.'},
+  plazoFijoUVA:{name:'Plazo Fijo UVA',        isUSD:false,getRate:function(){return(D.inflacionMensual/100)+(0.01/12);},info:'Ajusta por inflación (CER) + 1% anual. Mínimo 90 días. Único plazo fijo en pesos que protege el poder adquisitivo. Riesgo bajo.'},
+  billetera:   {name:'Billetera Virtual',      isUSD:false,getRate:function(){return D.tnaBilletera/100/12;},info:'Mercado Pago, Ualá, Naranja X. Liquidez inmediata. Ideal para fondo de emergencia.'},
+  fciMM:       {name:'FCI Money Market',       isUSD:false,getRate:function(){return 0.29/12;},info:'Fondo en cauciones y plazos fijos. Liquidez 24hs hábiles. Disponible en Galicia, Santander, BIND.'},
+  on:          {name:'ON Dólar-linked',        isUSD:true, getRate:function(){return 0.04/12;},info:'Obligación Negociable empresarial ~4% USD. Requiere cuenta comitente (Balanz, IOL). Riesgo crediticio del emisor.'},
+  ao26:        {name:'Bono AO26 (USD)',         isUSD:true, getRate:function(){return 0.08/12;},info:'Bono soberano en USD ~8% anual. Alta volatilidad y riesgo país. No recomendado para inversores conservadores.'},
+  cedear:      {name:'CEDEARs (S&P en ARS)',   isUSD:false,getRate:function(){return(1+0.0093)*(1+0.02)-1;},info:'Certificados del exterior en pesos. Seguís el S&P 500 más la devaluación. Muy popular para dolarizarse dentro del sistema local.'},
+  merval:      {name:'Merval (renta variable)',isUSD:false,getRate:function(){return 0.80/12;},info:'Acciones argentinas. ~80% nominal anual histórico en ARS con altísima volatilidad. Solo para inversores experimentados.'},
+  sp500:       {name:'S&P 500 (USD)',           isUSD:true, getRate:function(){return 0.0093;},info:'500 mayores empresas de EE.UU. ~11.2% anual histórico en USD. Accedés via ETFs (VOO, SPY) o CEDEARs. Horizonte: 5+ años.'},
+  nasdaq:      {name:'NASDAQ 100 (USD)',        isUSD:true, getRate:function(){return 0.14/12;},info:'Las 100 mayores tecnológicas. ~14% anual en USD, más volátil que S&P 500.'},
+  oro:         {name:'Oro (USD)',               isUSD:true, getRate:function(){return 0.07/12;},info:'~7% anual histórico en USD. Cobertura ante crisis. Accedés via ETF GLD o CEDEAR de Barrick Gold.'},
+  btc:         {name:'Bitcoin (ref. educ.)',    isUSD:true, getRate:function(){return 0.05;},info:'~60% anual histórico en USD con caídas de hasta 80%. Promedio histórico que no garantiza retornos futuros.'},
+  eth:         {name:'Ethereum (ref. educ.)',   isUSD:true, getRate:function(){return 0.50/12;},info:'~50% anual histórico en USD. Similar volatilidad a BTC. Solo referencia educativa.'},
+  staking:     {name:'Staking estable (USDT)', isUSD:true, getRate:function(){return 0.08/12;},info:'~6-10% anual en USD en Binance Earn u otros. Riesgo de plataforma. No equivale a un banco.'},
 };
 
 function fmtN(n,d){d=d||0;return Number(n).toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d});}
@@ -254,7 +254,7 @@ function redraw(){
     :(leGana?'<span class="badge" style="background:rgba(0,255,157,.12);border:1px solid rgba(0,255,157,.3);color:#00ff9d">✓ Le ganás a la inflación</span>':'<span class="badge" style="background:rgba(255,124,0,.12);border:1px solid rgba(255,124,0,.3);color:#ff7c00">✗ La inflación te supera</span>');
   var nota=$('inflNota');
   if(inst.isUSD&&currency==='pesos'&&!adjustInfl){nota.innerHTML='💡 Instrumento en USD. La curva en pesos incluye devaluación estimada ~2% mensual del MEP.';nota.classList.remove('hidden');}
-  else if((key==='plazoFijo'||key==='billetera'||key==='fciMM')&&currency==='pesos'&&!adjustInfl){var ia=(Math.pow(1+inflM,months)-1)*100;nota.innerHTML='⚠ Inflación acumulada estimada ~'+ia.toFixed(0)+'% en '+months+' meses. Este instrumento ('+fmtPct(ganPct)+' nominal) '+(ganPct>ia?'le gana':'pierde contra')+' la inflación. Activá el toggle para ver el impacto real.';nota.classList.remove('hidden');}
+  else if((key==='plazoFijo'||key==='billetera'||key==='fciMM')&&currency==='pesos'&&!adjustInfl){var ia=(Math.pow(1+inflM,months)-1)*100;nota.innerHTML='⚠ Inflación acumulada estimada ~'+ia.toFixed(0)+'% en '+months+' meses. Este instrumento ('+fmtPct(ganPct)+' nominal) '+(ganPct>ia?'le gana':'pierde contra')+' la inflación. Activá el toggle.';nota.classList.remove('hidden');}
   else nota.classList.add('hidden');
   var ti=Math.max(1,Math.floor(months/6)),tl=labels.map(function(l,i){return i%ti===0?l:'';});
   function fmtY(v){if(v>=1e9)return(v/1e9).toFixed(1)+'B';if(v>=1e6)return(v/1e6).toFixed(1)+'M';if(v>=1e3)return(v/1e3).toFixed(0)+'K';return v;}
@@ -305,55 +305,76 @@ function renderMarket(price,change24h,lbl){
   $('marketLoading').classList.add('hidden');$('marketError').classList.add('hidden');$('marketContent').classList.remove('hidden');
 }
 
-var ALIASES={btc:'bitcoin',eth:'ethereum',sol:'solana',bnb:'binancecoin',xrp:'ripple',doge:'dogecoin',ada:'cardano',avax:'avalanche-2',matic:'matic-network',polygon:'matic-network',dot:'polkadot',link:'chainlink',uni:'uniswap',atom:'cosmos',ltc:'litecoin',trx:'tron',near:'near',algo:'algorand',xlm:'stellar',icp:'internet-computer',fil:'filecoin',sand:'the-sandbox',mana:'decentraland',axs:'axie-infinity',aave:'aave',mkr:'maker',crv:'curve-dao-token',arb:'arbitrum',op:'optimism',sui:'sui',apt:'aptos',pepe:'pepe',shib:'shiba-inu',floki:'floki',wif:'dogwifcoin',bonk:'bonk',usdt:'tether',usdc:'usd-coin',dai:'dai',inj:'injective-protocol',sei:'sei-network',tia:'celestia',jup:'jupiter-exchange-solana',wld:'worldcoin-wld',fet:'fetch-ai'};
+// ── BINANCE API — sin límite de consultas ─────────────────────────────────
+async function fetchCoin(symbol, lbl){
+  $('marketContent').classList.add('hidden');
+  $('marketError').classList.add('hidden');
+  $('sigBadge').classList.add('hidden');
+  $('marketLoading').classList.remove('hidden');
+  $('marketLoading').textContent='⟳ Consultando '+lbl+'...';
 
-// API proxy público que no tiene restricciones CORS
-var PROXIES=[
-  'https://api.coingecko.com/api/v3/simple/price?ids={ID}&vs_currencies=usd&include_24hr_change=true',
-  'https://corsproxy.io/?url=https://api.coingecko.com/api/v3/simple/price?ids={ID}&vs_currencies=usd&include_24hr_change=true',
-];
+  var price=null, change24h=null;
+  try{
+    var url='https://api.binance.com/api/v3/ticker/24hr?symbol='+symbol.toUpperCase();
+    var r=await fetch(url);
+    if(r.ok){
+      var j=await r.json();
+      if(j.lastPrice){
+        price=parseFloat(j.lastPrice);
+        change24h=parseFloat(j.priceChangePercent);
+      }
+    }
+  }catch(e){}
 
-async function fetchCoin(cgId,lbl){
-  $('marketContent').classList.add('hidden');$('marketError').classList.add('hidden');$('sigBadge').classList.add('hidden');
-  $('marketLoading').classList.remove('hidden');$('marketLoading').textContent='⟳ Consultando '+lbl+'...';
-  var price=null,change24h=null;
-  for(var i=0;i<PROXIES.length;i++){
-    try{
-      var url=PROXIES[i].replace('{ID}',cgId);
-      var r=await fetch(url,{signal:AbortSignal.timeout(8000)});
-      if(r.ok){var j=await r.json();var d=j[cgId];if(d&&d.usd){price=d.usd;change24h=d.usd_24h_change||null;break;}}
-    }catch(e){}
-  }
   if(price===null){
     $('marketLoading').classList.add('hidden');
-    $('marketError').innerHTML='<strong>No se pudo obtener datos de "'+lbl+'".</strong><br><br>'+
-      '• Verificá que el nombre sea el ID de CoinGecko en inglés:<br>'+
-      '&nbsp;&nbsp;dogecoin · avalanche-2 · cardano · matic-network · shiba-inu · pepe<br>'+
-      '• También podés escribir el símbolo corto: doge, avax, ada, matic, shib<br>'+
-      '• Si acabás de buscar otra moneda, esperá 30 segundos (límite de API) y volvé a intentar.';
-    $('marketError').classList.remove('hidden');return;
+    $('marketError').innerHTML=
+      '<strong>No se encontró "'+lbl+'".</strong><br><br>'+
+      'Escribí solo el símbolo sin "USDT": <br>'+
+      '<span style="color:#94a3b8">DOGE · AVAX · ADA · MATIC · PEPE · SHIB · ARB · OP · SUI · APT · DOT · LINK · ATOM · LTC · TRX · NEAR · FIL · INJ · WLD · JUP</span>';
+    $('marketError').classList.remove('hidden');
+    return;
   }
-  renderMarket(price,change24h,lbl.toUpperCase());
+  renderMarket(price, change24h, lbl.toUpperCase());
 }
 
-function selectPreset(btn,cgId,lbl){
+// Aliases: símbolo corto → par Binance
+var SYMBOLS={
+  BTC:'BTCUSDT',ETH:'ETHUSDT',SOL:'SOLUSDT',BNB:'BNBUSDT',XRP:'XRPUSDT',
+  DOGE:'DOGEUSDT',ADA:'ADAUSDT',AVAX:'AVAXUSDT',MATIC:'MATICUSDT',
+  DOT:'DOTUSDT',LINK:'LINKUSDT',UNI:'UNIUSDT',ATOM:'ATOMUSDT',LTC:'LTCUSDT',
+  TRX:'TRXUSDT',NEAR:'NEARUSDT',ALGO:'ALGOUSDT',XLM:'XLMUSDT',
+  FIL:'FILUSDT',SAND:'SANDUSDT',MANA:'MANAUSDT',AXS:'AXSUSDT',
+  AAVE:'AAVEUSDT',MKR:'MKRUSDT',ARB:'ARBUSDT',OP:'OPUSDT',
+  SUI:'SUIUSDT',APT:'APTUSDT',PEPE:'PEPEUSDT',SHIB:'SHIBUSDT',
+  FLOKI:'FLOKIUSDT',WIF:'WIFUSDT',BONK:'BONKUSDT',
+  INJ:'INJUSDT',SEI:'SEIUSDT',TIA:'TIAUSDT',JUP:'JUPUSDT',
+  WLD:'WLDUSDT',FET:'FETUSDT',RENDER:'RENDERUSDT',IMX:'IMXUSDT',
+  GRT:'GRTUSDT',LDO:'LDOUSDT',RUNE:'RUNEUSDT',CAKE:'CAKEUSDT',
+  ENS:'ENSUSDT',CRV:'CRVUSDT',SNX:'SNXUSDT',ZEC:'ZECUSDT',
+};
+
+function selectPreset(btn, symbol, lbl){
   document.querySelectorAll('.coin-btn').forEach(function(b){b.classList.remove('on');});
-  btn.classList.add('on');$('customCoin').value='';fetchCoin(cgId,lbl);
+  btn.classList.add('on');
+  $('customCoin').value='';
+  fetchCoin(symbol, lbl);
 }
 
 function searchCustom(){
-  var raw=$('customCoin').value.trim().toLowerCase().replace(/\s+/g,'-');
-  if(!raw)return;
-  var cgId=ALIASES[raw]||raw;
-  var lbl=raw.replace(/-\d+$/,'').replace(/-.*$/,'').toUpperCase();
+  var raw=$('customCoin').value.trim().toUpperCase().replace(/\s+/g,'').replace(/USDT$/,'');
+  if(!raw) return;
+  var symbol=SYMBOLS[raw]||(raw+'USDT');
   document.querySelectorAll('.coin-btn').forEach(function(b){b.classList.remove('on');});
-  fetchCoin(cgId,lbl);
+  fetchCoin(symbol, raw);
 }
 
 async function loadArgentina(){
-  var urls=['https://dolarapi.com/v1/cotizaciones/mep','https://dolarapi.com/v1/ambitos/tasas'];
   try{
-    var rs=await Promise.all(urls.map(function(u){return fetch(u,{signal:AbortSignal.timeout(6000)}).catch(function(){return null;});}));
+    var rs=await Promise.all([
+      fetch('https://dolarapi.com/v1/cotizaciones/mep').catch(function(){return null;}),
+      fetch('https://dolarapi.com/v1/ambitos/tasas').catch(function(){return null;})
+    ]);
     if(rs[0]&&rs[0].ok){var j=await rs[0].json();if(j.venta)D.dolarMEP=j.venta;}
     if(rs[1]&&rs[1].ok){var j2=await rs[1].json();if(Array.isArray(j2)){var pf=j2.find(function(t){return t.tipo&&t.tipo.toLowerCase().includes('plazo');});if(pf&&pf.valor)D.tnaPlazofijo=pf.valor;}}
   }catch(e){}
@@ -365,13 +386,23 @@ async function loadArgentina(){
 
 async function loadBTC(){
   try{
-    var url='https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true';
-    var r=await fetch(url,{signal:AbortSignal.timeout(8000)});
-    if(r.ok){var j=await r.json();if(j.bitcoin&&j.bitcoin.usd){var ch=j.bitcoin.usd_24h_change||0;$('sBTC').textContent='$ '+fmtN(Math.round(j.bitcoin.usd));$('sBTCsub').textContent=(ch>=0?'▲':'▼')+' '+Math.abs(ch).toFixed(2)+'% (24h)';$('sBTCsub').style.color=ch>=0?'#00ff9d':'#ff3355';}}
+    var r=await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+    if(r.ok){
+      var j=await r.json();
+      var ch=parseFloat(j.priceChangePercent)||0;
+      $('sBTC').textContent='$ '+fmtN(Math.round(parseFloat(j.lastPrice)));
+      $('sBTCsub').textContent=(ch>=0?'▲':'▼')+' '+Math.abs(ch).toFixed(2)+'% (24h)';
+      $('sBTCsub').style.color=ch>=0?'#00ff9d':'#ff3355';
+    }
   }catch(e){$('sBTCsub').textContent='sin datos';}
 }
 
-window.addEventListener('DOMContentLoaded',function(){redraw();loadArgentina();loadBTC();fetchCoin('bitcoin','BTC');});
+window.addEventListener('DOMContentLoaded',function(){
+  redraw();
+  loadArgentina();
+  loadBTC();
+  fetchCoin('BTCUSDT','BTC');
+});
 </script>
 </body>
 </html>
